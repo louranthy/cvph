@@ -12,4 +12,12 @@ export class CovidService {
   getConfirmedCases() {
     return this.http.get<any>("https://ncovph.com/api/confirmed-cases");
   }
+
+  getOfwCases() {
+    return this.http.get<any>("https://ncovph.com/api/ofw-cases");
+  }
+
+  getForeignNationalCases() {
+    return this.http.get<any>("https://ncovph.com/api/foreign-national-cases");
+  }
 }
