@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CovidService } from 'app/service/covid.service';
+import { FormatterService } from 'app/service/formatter.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -18,7 +19,8 @@ export class ForeignCasesComponent implements OnInit, OnDestroy {
 
   @ViewChild('datatable', { static: true }) table;
   constructor(
-    private covidService: CovidService
+    private covidService: CovidService,
+    private formatterService: FormatterService
   ) { }
 
   ngOnInit() {
@@ -26,7 +28,7 @@ export class ForeignCasesComponent implements OnInit, OnDestroy {
     this.covidService.getForeignNationalCases().subscribe(data => {
       this.numberCases = data.length;
       this.tableData = data;
-      console.log(this.tableData);
+
       this.dtOptions = {
         data: this.tableData,
         processing: true,
@@ -36,8 +38,8 @@ export class ForeignCasesComponent implements OnInit, OnDestroy {
           { title: 'SEX', data: 'sex' },
           { title: 'NATIONALITY', data: 'nationality' },
           { title: 'STATUS', data: 'status' },
-          { title: 'ARRIVAL', data: 'travel_date.arrival', type: 'date' },
-          { title: 'DEPARTURE', data: 'travel_date.departure', type: 'date', cellFilter: 'MM/DD/YYYY' },
+          { title: 'ARRIVAL', data: 'travel_date.arrival', render: this.formatterService.formatDate },
+          { title: 'DEPARTURE', data: 'travel_date.departure', render: this.formatterService.formatDate },
           { title: 'TRAVEL HISTORY', data: 'travel_history' },
           { title: 'CURRENT LOCATION', data: 'where_now' }
         ]
