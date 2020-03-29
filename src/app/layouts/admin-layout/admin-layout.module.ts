@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { LbdModule } from '../../lbd/lbd.module';
-import { NguiMapModule} from '@ngui/map';
+import { NguiMapModule } from '@ngui/map';
 
 import { AdminLayoutRoutes } from './admin-layout.routing';
 
 import { HomeComponent } from '../../home/home.component';
 import { UserComponent } from '../../user/user.component';
 import { TablesComponent } from '../../tables/tables.component';
+import { ForeignCasesComponent } from '../../foreign/foreign.component';
 import { TypographyComponent } from '../../typography/typography.component';
 import { IconsComponent } from '../../icons/icons.component';
 import { MapsComponent } from '../../maps/maps.component';
@@ -25,13 +26,14 @@ import { DataTablesModule } from 'angular-datatables';
     RouterModule.forChild(AdminLayoutRoutes),
     FormsModule,
     LbdModule,
-    NguiMapModule.forRoot({apiUrl: 'https://maps.google.com/maps/api/js?key=YOUR_KEY_HERE'}),
+    NguiMapModule.forRoot({ apiUrl: 'https://maps.google.com/maps/api/js?key=YOUR_KEY_HERE' }),
     DataTablesModule
   ],
   declarations: [
     HomeComponent,
     UserComponent,
     TablesComponent,
+    ForeignCasesComponent,
     TypographyComponent,
     IconsComponent,
     MapsComponent,
@@ -40,4 +42,4 @@ import { DataTablesModule } from 'angular-datatables';
   ]
 })
 
-export class AdminLayoutModule {}
+export class AdminLayoutModule { }
