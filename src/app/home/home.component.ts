@@ -1,18 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewChild, OnDestroy } from '@angular/core';
 import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
 import { LegendItem, ChartType } from '../lbd/lbd-chart/lbd-chart.component';
 import * as Chartist from 'chartist';
 import { CovidService } from 'app/service/covid.service';
 import * as _ from "lodash";
 import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Color, Label, SingleDataSet } from 'ng2-charts';
-
+import { Color, Label, SingleDataSet, BaseChartDirective } from 'ng2-charts';
+import { BehaviorSubject } from 'rxjs';
+import { ChartService } from 'app/service/chart.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+     localGenderUpdated: boolean
+     ofwGenderUpdated: boolean
     public localChartType: ChartType;
     public localChartData: any;
     public localChartLegendItems: LegendItem[];
@@ -59,13 +62,18 @@ export class HomeComponent implements OnInit {
     public pieChartType: ChartType.Pie;
     public pieChartLegend = true;
     public pieChartPlugins = [];
-  constructor(private  covidService : CovidService) {
-     
+    
+  constructor(private  covidService : CovidService,
+    private chartService : ChartService) {
+      this.chartService.localGenderUpdated.subscribe( value => {
+        this.localGenderUpdated = value;
+    });
+    this.chartService.ofwGenderUpdated.subscribe( value => {
+      this.ofwGenderUpdated = value;
+  });
    }
 
   ngOnInit() {
-
-    
     var self = this;
     this.covidService.getConfirmedCases().subscribe(data=>{
       this.numberCases = data.length;
@@ -75,13 +83,13 @@ export class HomeComponent implements OnInit {
       this.localFemale = Number(this.confirmedCasesSex['Female'].length);
       this.localMale = Number(this.confirmedCasesSex['Male'].length);
       this.addData(this.localChartType, this.localChartData, [this.localMale, this.localFemale], [this.localMale, this.localFemale], 'Local Statistics ' + this.numberCases);
-    
+      this.chartService.localGenderUpdated.next(true);
     });
-    this.localChartType = ChartType.Pie;
-    this.localChartData = {
-      labels: [],
-      series: []
-    };
+     this.localChartType = ChartType.Pie;
+     this.localChartData = {
+       labels: [],
+       series: []
+     };
     this.localChartLegendItems = [
       { title: 'Male', imageClass: 'fa fa-circle text-info' },
       { title: 'Female', imageClass: 'fa fa-circle text-danger' }
@@ -94,6 +102,7 @@ export class HomeComponent implements OnInit {
       this.ofwFemale = Number(this.ofwCasesSex['Female'].length);
       this.ofwMale = Number(this.ofwCasesSex['Male'].length);
       this.addData(this.ofwChartType, this.ofwChartData, [this.ofwMale, this.ofwFemale], [this.ofwMale, this.ofwFemale], 'OFW Statistics ' + this.ofwCases);
+      this.chartService.ofwGenderUpdated.next(true);
     });
     this.ofwChartType = ChartType.Pie;
     this.ofwChartData = {
@@ -178,10 +187,16 @@ export class HomeComponent implements OnInit {
     }
 
      addData(chart, chartData, label, data, title) {
-        setTimeout(() => {
+       console.log(label);
           chartData.labels = label;
           chartData.series = data;
-          chart.update;
-        }, 500);
+          setTimeout(() => {
+            chartData.update;
+          }, 10);
+  }
+
+  ngOnDestroy(){
+    this.chartService.localGenderUpdated.next(false);
+    this.chartService.ofwGenderUpdated.next(false);
   }
 }

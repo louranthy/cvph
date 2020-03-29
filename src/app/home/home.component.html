@@ -1,12 +1,13 @@
 <div class="main-content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-4">
-                <lbd-chart
+            <div class="col-md-4" >
+                <lbd-chart *ngIf="localGenderUpdated"
                   [title]="'Local Statistics' "
                   [chartClass]="'ct-perfect-fourth'"
                   [chartType]="localChartType"
                   [chartData]="localChartData"
+                  [withHr]="true"
                   [legendItems]="localChartLegendItems"
                   [footerIconClass]="'fa fa-clock-o'"
                   [footerText]="'Local Cases'">
@@ -17,8 +18,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
-                <lbd-chart
+            <div class="col-md-4" >
+                <lbd-chart *ngIf="ofwGenderUpdated"
                 [title]="'OFW Statistics'"
                 [chartClass]="'ct-perfect-fourth'"
                 [chartType]="ofwChartType"
