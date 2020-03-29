@@ -33,6 +33,7 @@ export class ForeignCasesComponent implements OnInit, OnDestroy {
         data: this.tableData,
         processing: true,
         columns: [
+          { title: 'Item', data: 'caseID', render: this.formatterService.formatIdToNumber },
           { title: 'ID', data: 'caseID' },
           { title: 'AGE', data: 'age' },
           { title: 'SEX', data: 'sex' },
