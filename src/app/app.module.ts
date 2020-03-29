@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import {TableModule} from 'primeng/table';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { DataTablesModule } from 'angular-datatables';
+import { ChartsModule } from 'ng2-charts';
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -24,7 +25,8 @@ import { DataTablesModule } from 'angular-datatables';
     SidebarModule,
     AppRoutingModule,
     DataTablesModule.forRoot(),
-    TableModule
+    TableModule,
+    ChartsModule
   ],
   declarations: [
     AppComponent,

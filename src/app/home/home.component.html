@@ -1,0 +1,40 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <lbd-chart
+                  [title]="'Local Statistics' "
+                  [chartClass]="'ct-perfect-fourth'"
+                  [chartType]="localChartType"
+                  [chartData]="localChartData"
+                  [legendItems]="localChartLegendItems"
+                  [footerIconClass]="'fa fa-clock-o'"
+                  [footerText]="'Local Cases'">
+                </lbd-chart>
+            </div>
+            <div class="col-md-8">
+                TO BE ADDED
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <lbd-chart
+                [title]="'OFW Statistics'"
+                [chartClass]="'ct-perfect-fourth'"
+                [chartType]="ofwChartType"
+                [chartData]="ofwChartData"
+                [legendItems]="ofwChartLegendItems"
+                [withHr]="true"
+                [footerIconClass]="'fa fa-clock-o'"
+                [footerText]="'OFW Cases'">
+              </lbd-chart>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

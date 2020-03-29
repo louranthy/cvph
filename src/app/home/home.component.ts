@@ -3,6 +3,9 @@ import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
 import { LegendItem, ChartType } from '../lbd/lbd-chart/lbd-chart.component';
 import * as Chartist from 'chartist';
 import { CovidService } from 'app/service/covid.service';
+import * as _ from "lodash";
+import { ChartDataSets, ChartOptions } from 'chart.js';
+import { Color, Label, SingleDataSet } from 'ng2-charts';
 
 @Component({
   selector: 'app-home',
@@ -10,9 +13,13 @@ import { CovidService } from 'app/service/covid.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-    public emailChartType: ChartType;
-    public emailChartData: any;
-    public emailChartLegendItems: LegendItem[];
+    public localChartType: ChartType;
+    public localChartData: any;
+    public localChartLegendItems: LegendItem[];
+
+    public ofwChartType: ChartType;
+    public ofwChartData: any;
+    public ofwChartLegendItems: LegendItem[];
 
     public hoursChartType: ChartType;
     public hoursChartData: any;
@@ -31,30 +38,73 @@ export class HomeComponent implements OnInit {
     public locationChartLegendItems: LegendItem[];
 
     public numberCases: Number;
-    public data = [
-        
-    ];
+    public ofwCases: Number;
+    public foreignCases: Number;
+    public confirmedCasesData = [];
+    public ofwCasesData = [];
+    public foreignNationalCasesData = [];
+    public confirmedCasesSex = {};
+    public confirmedCasesResidence = {};
+    public localFemale: Number;
+    public localMale: Number;
+    public ofwCasesSex = {};
+    public ofwCasesResidence = {};
+    public ofwFemale: Number;
+    public ofwMale: Number;
+    public pieChartOptions: ChartOptions = {
+      responsive: true,
+    };
+    public pieChartLabels: Label[] = [['SciFi'], ['Drama'], 'Comedy'];
+    public pieChartData: SingleDataSet = [30, 50, 20];
+    public pieChartType: ChartType.Pie;
+    public pieChartLegend = true;
+    public pieChartPlugins = [];
   constructor(private  covidService : CovidService) {
      
    }
 
   ngOnInit() {
 
+    
+    var self = this;
     this.covidService.getConfirmedCases().subscribe(data=>{
       this.numberCases = data.length;
-      this.data = data;
-  });
-
-      this.emailChartType = ChartType.Pie;
-      this.emailChartData = {
-        labels: ['62%', '32%', '6%'],
-        series: [62, 32, 6]
-      };
-      this.emailChartLegendItems = [
-        { title: 'Open', imageClass: 'fa fa-circle text-info' },
-        { title: 'Bounce', imageClass: 'fa fa-circle text-danger' },
-        { title: 'Unsubscribe', imageClass: 'fa fa-circle text-warning' }
-      ];
+      this.confirmedCasesData = data;
+      this.confirmedCasesSex = _.groupBy(this.confirmedCasesData, 'sex');
+      this.confirmedCasesResidence = _.groupBy(this.confirmedCasesData, 'metadata[row_data][residence]');
+      this.localFemale = Number(this.confirmedCasesSex['Female'].length);
+      this.localMale = Number(this.confirmedCasesSex['Male'].length);
+      this.addData(this.localChartType, this.localChartData, [this.localMale, this.localFemale], [this.localMale, this.localFemale], 'Local Statistics ' + this.numberCases);
+    
+    });
+    this.localChartType = ChartType.Pie;
+    this.localChartData = {
+      labels: [],
+      series: []
+    };
+    this.localChartLegendItems = [
+      { title: 'Male', imageClass: 'fa fa-circle text-info' },
+      { title: 'Female', imageClass: 'fa fa-circle text-danger' }
+    ];
+    
+    this.covidService.getOfwCases().subscribe(data=>{
+      this.ofwCases = data.length;
+      this.ofwCasesData = data;
+      this.ofwCasesSex = _.groupBy(this.ofwCasesData, 'sex');
+      this.ofwFemale = Number(this.ofwCasesSex['Female'].length);
+      this.ofwMale = Number(this.ofwCasesSex['Male'].length);
+      this.addData(this.ofwChartType, this.ofwChartData, [this.ofwMale, this.ofwFemale], [this.ofwMale, this.ofwFemale], 'OFW Statistics ' + this.ofwCases);
+    });
+    this.ofwChartType = ChartType.Pie;
+    this.ofwChartData = {
+      labels: [],
+      series: []
+    };
+    this.ofwChartLegendItems = [
+      { title: 'Male', imageClass: 'fa fa-circle text-info' },
+      { title: 'Female', imageClass: 'fa fa-circle text-danger' }
+    ];
+     
 
       this.hoursChartType = ChartType.Line;
       this.hoursChartData = {
@@ -127,4 +177,11 @@ export class HomeComponent implements OnInit {
 
     }
 
+     addData(chart, chartData, label, data, title) {
+        setTimeout(() => {
+          chartData.labels = label;
+          chartData.series = data;
+          chart.update;
+        }, 500);
+  }
 }
