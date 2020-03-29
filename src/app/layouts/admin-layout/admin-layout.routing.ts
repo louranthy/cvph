@@ -4,6 +4,7 @@ import { HomeComponent } from '../../home/home.component';
 import { UserComponent } from '../../user/user.component';
 import { TablesComponent } from '../../tables/tables.component';
 import { ForeignCasesComponent } from '../../foreign/foreign.component';
+import { OFWCaseComponent } from '../../ofw/ofw.component';
 import { TypographyComponent } from '../../typography/typography.component';
 import { IconsComponent } from '../../icons/icons.component';
 import { MapsComponent } from '../../maps/maps.component';
@@ -15,6 +16,7 @@ export const AdminLayoutRoutes: Routes = [
   //  { path: 'user',           component: UserComponent },
   { path: 'local-case', component: TablesComponent },
   { path: 'foreign-case', component: ForeignCasesComponent },
+  { path: 'ofw-case', component: OFWCaseComponent },
   //    { path: 'typography',     component: TypographyComponent },
   //  { path: 'icons',          component: IconsComponent },
   //  { path: 'maps',           component: MapsComponent },
