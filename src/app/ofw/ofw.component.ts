@@ -36,7 +36,7 @@ export class OFWCaseComponent implements OnInit, OnDestroy {
         data: this.tableData,
         processing: true,
         columns: [
-          { title: 'Item', data: 'caseID', render: this.formatterService.formatIdToNumber },
+          { title: '', data: 'caseID', render: this.formatterService.formatIdToNumber },
           { title: 'ID', data: 'caseID' },
           { title: 'AGE', data: 'age', defaultContent: "<i>NO DATA</i>" },
           { title: 'SEX', data: 'sex', defaultContent: "<i>NO DATA</i>" },
