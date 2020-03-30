@@ -1,58 +1,97 @@
 <div class="main-content">
     <div class="container-fluid">
+
         <div class="card">
-            <div class="header">
-                <h4 class="title">Confirmed Cases : <b> {{ numberCases }} </b></h4>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="header col-md-2">
+                        <div class="col-md-12 alert alert-active">
+                            <h5> Confirmed Cases
+                                <div><br><b> {{ numberCases }} </b></div>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="header col-md-2">
+                        <div class="col-md-12 alert alert-success">
+                            <h5> Recovered <div><br><b> {{ recoveredCount }} </b></div>
+                            </h5>
+                        </div>
+                    </div>
+
+                    <div class="header col-md-2">
+                        <div class="col-md-12 alert alert-gray">
+                            <h5> Deceased <div><br><b> {{ deceasedCount }} </b></div>
+                            </h5>
+                        </div>
+                    </div>
+
+                    <div class="header col-md-2">
+                        <div class="col-md-12 alert alert-warning">
+                            <h5> PUM <div><br><b> {{ pumCount }} </b></div>
+                            </h5>
+                        </div>
+                    </div>
+
+                    <div class="header col-md-2">
+                        <div class="col-md-12 alert alert-danger">
+                            <h5> PUI <div><br><b> {{ puiCount }} </b></div>
+                            </h5>
+                        </div>
+                    </div>
+
+                    <div class="header col-md-2">
+                        <div class="col-md-12 alert alert-blue">
+                            <h5> Tested Cases <div><br><b> {{ testedCases }} </b></div>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <div class="card">
             <div class="content table-responsive table-full-width">
                 <div class="row">
-
                     <div class="col-md-4">
-
                         <lbd-chart *ngIf="localGenderUpdated" [title]="'Local Statistics' "
                             [chartClass]="'ct-perfect-fourth'" [chartType]="localChartType" [chartData]="localChartData"
                             [withHr]="true" [legendItems]="localChartLegendItems" [footerIconClass]="'fa fa-clock-o'"
                             [footerText]="'Local Cases'">
                         </lbd-chart>
                     </div>
+
                     <div class="content table-responsive table-full-width col-md-6">
                         <table #confirmedFacilityTable
                             class="table table-striped table-bordered table-sm row-border hover"></table>
                     </div>
-                 
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Locations</h4>
+            </div>
+
+            <div class="content table-responsive table-full-width">
+                <div class="row">
+                    <div class="col-md-9">
+                        <lbd-chart *ngIf="locationUpdated" [title]="'By Region'" [subtitle]="''"
+                            [chartType]="locationChartType" [chartData]="locationChartData"
+                            [chartOptions]="locationChartOptions" [chartResponsive]="locationChartResponsive"
+                            [legendItems]="locationChartLegendItems" [withHr]="true" [footerIconClass]="'fa fa-check'"
+                            [footerText]="'Some data for validation'">
+                        </lbd-chart>
+                    </div>
+
+                    <div class="content table-responsive table-full-width col-md-3">
+                        <table #confirmedResidenceTable
+                            class="table table-striped table-bordered table-sm row-border hover"></table>
+                    </div>
                 </div>
             </div>
 
         </div>
-        <div class="card">
-                <div class="header">
-                    <h4 class="title">Locations</h4>
-                </div>
-                <div class="content table-responsive table-full-width">
-                    <div class="row">
-                       
-                        <div class="col-md-9">
-                                <lbd-chart *ngIf="locationUpdated"
-                                  [title]="'By Region'"
-                                  [subtitle]="''"
-                                  [chartType]="locationChartType"
-                                  [chartData]="locationChartData"
-                                  [chartOptions]="locationChartOptions"
-                                  [chartResponsive]="locationChartResponsive"
-                                  [legendItems]="locationChartLegendItems"
-                                  [withHr]="true"
-                                  [footerIconClass]="'fa fa-check'"
-                                  [footerText]="'Some data for validation'">
-                                </lbd-chart>
-                            </div>
-                            <div class="content table-responsive table-full-width col-md-3">
-                                    <table #confirmedResidenceTable
-                                        class="table table-striped table-bordered table-sm row-border hover"></table>
-                                </div>
-                    </div>
-                </div>
-    
-            </div>
 
     </div>
 </div>
