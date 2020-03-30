@@ -39,7 +39,6 @@ export class LocalCasesComponent implements OnInit, OnDestroy {
           { title: 'NATIONALITY', data: 'nationality' },
           { title: 'STATUS', data: 'status' },
           { title: 'FACILITY', data: 'facility' },
-          { title: 'RESIDENCE', data: 'metadata.raw_data.residence' },
           { title: 'TRAVEL HISTORY', data: 'metadata.raw_data.travel_history' }
         ]
       };
