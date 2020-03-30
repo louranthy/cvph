@@ -3,20 +3,19 @@ import { CovidService } from 'app/service/covid.service';
 import { FormatterService } from 'app/service/formatter.service';
 import { Subject } from 'rxjs';
 
+
 @Component({
   selector: 'app-tables',
-  templateUrl: './foreign.component.html',
-  styleUrls: ['./foreign.component.css']
+  templateUrl: './local.component.html',
+  styleUrls: ['./local.component.css']
 })
-
-export class ForeignCasesComponent implements OnInit, OnDestroy {
+export class LocalCasesComponent implements OnInit, OnDestroy {
   public numberCases: Number;
   public data = [];
   public dtTrigger: Subject<any> = new Subject();
   dataTable: any;
   dtOptions: any;
   tableData = [];
-
   @ViewChild('datatable', { static: true }) table;
   constructor(
     private covidService: CovidService,
@@ -25,7 +24,7 @@ export class ForeignCasesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.covidService.getForeignNationalCases().subscribe(data => {
+    this.covidService.getConfirmedCases().subscribe(data => {
       this.numberCases = data.length;
       this.tableData = data;
 
@@ -39,17 +38,14 @@ export class ForeignCasesComponent implements OnInit, OnDestroy {
           { title: 'SEX', data: 'sex' },
           { title: 'NATIONALITY', data: 'nationality' },
           { title: 'STATUS', data: 'status' },
-          { title: 'ARRIVAL', data: 'travel_date.arrival', render: this.formatterService.formatDate },
-          { title: 'DEPARTURE', data: 'travel_date.departure', render: this.formatterService.formatDate },
-          { title: 'TRAVEL HISTORY', data: 'travel_history' },
-          { title: 'CURRENT LOCATION', data: 'where_now' }
+          { title: 'FACILITY', data: 'facility' },
+          { title: 'RESIDENCE', data: 'metadata.raw_data.residence' },
+          { title: 'TRAVEL HISTORY', data: 'metadata.raw_data.travel_history' }
         ]
       };
     }, err => { }, () => {
-
       this.dataTable = $(this.table.nativeElement);
       this.dataTable.DataTable(this.dtOptions);
-
     });
 
   }

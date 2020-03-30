@@ -1,20 +1,20 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { OFWCaseComponent } from './ofw.component';
+import { LocalCasesComponent } from './local.component';
 
-describe('OFWCaseComponent', () => {
-  let component: OFWCaseComponent;
-  let fixture: ComponentFixture<OFWCaseComponent>;
+describe('LocalCasesComponent', () => {
+  let component: LocalCasesComponent;
+  let fixture: ComponentFixture<LocalCasesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [OFWCaseComponent]
+      declarations: [LocalCasesComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OFWCaseComponent);
+    fixture = TestBed.createComponent(LocalCasesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

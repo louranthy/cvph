@@ -25,4 +25,9 @@ export class FormatterService {
     }
 
   }
+
+  formatIdToNumber(data) {
+    return parseInt(data.substring(2, 9999999))
+  }
+
 }

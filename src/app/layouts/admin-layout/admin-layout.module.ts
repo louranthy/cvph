@@ -10,7 +10,7 @@ import { AdminLayoutRoutes } from './admin-layout.routing';
 
 import { HomeComponent } from '../../home/home.component';
 import { UserComponent } from '../../user/user.component';
-import { TablesComponent } from '../../tables/tables.component';
+import { LocalCasesComponent } from '../../local/local.component';
 import { ForeignCasesComponent } from '../../foreign/foreign.component';
 import { TypographyComponent } from '../../typography/typography.component';
 import { IconsComponent } from '../../icons/icons.component';
@@ -32,7 +32,7 @@ import { DataTablesModule } from 'angular-datatables';
   declarations: [
     HomeComponent,
     UserComponent,
-    TablesComponent,
+    LocalCasesComponent,
     ForeignCasesComponent,
     TypographyComponent,
     IconsComponent,
