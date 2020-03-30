@@ -144,14 +144,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       return 'N/A';
       if(value.residence.region == null)
       return 'N/A';
-      return _.startCase(_.toLower(value.residence.region));
+      return _.toUpper(value.residence.region);
   });
   
 
   var values = new Array();
   var regions = new Array();
   _.forEach(regionCount, function(el,index,arr){
-    regions.push(_.replace(index,"Region",""));
+    regions.push(_.replace(index,"REGION_",""));
     values.push(arr[index].length);
   });
   this.addBarData(this.locationChartType,this.locationChartData, regions,values);
