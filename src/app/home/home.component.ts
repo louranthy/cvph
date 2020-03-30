@@ -16,6 +16,7 @@ import { ChartService } from 'app/service/chart.service';
 export class HomeComponent implements OnInit, OnDestroy {
      localGenderUpdated: boolean
      ofwGenderUpdated: boolean
+     locationUpdated: boolean;
     public localChartType: ChartType;
     public localChartData: any;
     public localChartLegendItems: LegendItem[];
@@ -32,13 +33,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     public activityChartType: ChartType;
     public activityChartData: any;
-    public activityChartOptions: any;
-    public activityChartResponsive: any[];
-    public activityChartLegendItems: LegendItem[];
+    public locationChartOptions: any;
+    public locationChartResponsive: any[];
+    public locationChartLegendItems: LegendItem[];
 
     public locationChartType: ChartType;
     public locationChartData: any;
-    public locationChartLegendItems: LegendItem[];
 
     public numberCases: Number;
     public ofwCases: Number;
@@ -64,6 +64,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     confirmedFacilityDtOptions: any;
     confirmedFacilityTableData = [];
     @ViewChild('confirmedFacilityTable', {static: true}) confirmedFacilityTable;
+    public confirmedResidenceDtTrigger: Subject<any> = new Subject();
+    confirmedResidenceDataTable: any;
+    confirmedResidenceDtOptions: any;
+    confirmedResidenceTableData = [];
+    @ViewChild('confirmedResidenceTable', {static: true}) confirmedResidenceTable;
   constructor(private  covidService : CovidService,
     private chartService : ChartService) {
       this.chartService.localGenderUpdated.subscribe( value => {
@@ -72,6 +77,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.chartService.ofwGenderUpdated.subscribe( value => {
       this.ofwGenderUpdated = value;
   });
+  this.chartService.locationUpdated.subscribe( value => {
+    this.locationUpdated = value;
+});
    }
 
   ngOnInit() {
@@ -80,18 +88,28 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.numberCases = data.length;
       this.confirmedCasesData = data;
       this.confirmedCasesSex = _.groupBy(this.confirmedCasesData, 'sex');
-      this.confirmedCasesResidence = _.groupBy(this.confirmedCasesData, 'metadata.row_data.residence');
-      this.confirmedCasesFacility = _.groupBy(this.confirmedCasesData, 'facility');
-      console.log(this.confirmedCasesFacility);
+      this.confirmedCasesResidence = _.groupBy(this.confirmedCasesData, function(value){
+        if(value.metadata.raw_data.residence == null)
+        return 'N/A';
+        return _.startCase(_.toLower(value.metadata.raw_data.residence));
+    });
+      this.confirmedCasesFacility = _.groupBy(this.confirmedCasesData, function(value){
+        if(value.facility == null)
+        return 'N/A';
+        return _.startCase(_.toLower(value.facility));
+    });
       this.localFemale = Number(this.confirmedCasesSex['Female'].length);
       this.localMale = Number(this.confirmedCasesSex['Male'].length);
-      this.addData(this.localChartType, this.localChartData, [this.localMale, this.localFemale], [this.localMale, this.localFemale], 'Local Statistics ' + this.numberCases);
+      this.addData(this.localChartType, this.localChartData, [this.localMale, this.localFemale], [this.localMale, this.localFemale]);
       this.chartService.localGenderUpdated.next(true);
 
       var facilities = [];
       _.forEach(this.confirmedCasesFacility, function(el,index,arr){
-        //console.log( 'facility : ' +index + 'count : ' + el.length);
-        facilities.push({"facility" : index , "count" : el.length})
+        facilities.push({"facility" : index , "count" : arr[index].length})
+      });
+      var residencies = [];
+      _.forEach(this.confirmedCasesResidence, function(el,index,arr){
+        residencies.push({"residence" : index , "count" : arr[index].length})
       });
        this.confirmedFacilityDtOptions = {
          data: facilities,
@@ -101,10 +119,49 @@ export class HomeComponent implements OnInit, OnDestroy {
            {title: 'Count', data: 'count'}
          ]
        };
+
+       this.confirmedResidenceDtOptions = {
+        data: residencies,
+        processing: true,
+        columns: [
+          {title: 'Residence', data: 'residence'},
+          {title: 'Count', data: 'count'}
+        ]
+      };
+
+
+      var provinceCount = _.groupBy(this.confirmedCasesData, function(value){
+        if(value.residence == null)
+        return 'N/A';
+        if(value.residence.province == null)
+        return 'N/A';
+        return _.startCase(_.toLower(value.residence.province));
+    });
+    
+
+    var regionCount = _.groupBy(this.confirmedCasesData, function(value){
+      if(value.residence == null)
+      return 'N/A';
+      if(value.residence.region == null)
+      return 'N/A';
+      return _.startCase(_.toLower(value.residence.region));
+  });
+  
+
+  var values = new Array();
+  var regions = new Array();
+  _.forEach(regionCount, function(el,index,arr){
+    regions.push(_.replace(index,"Region",""));
+    values.push(arr[index].length);
+  });
+  this.addBarData(this.locationChartType,this.locationChartData, regions,values);
+  this.chartService.locationUpdated.next(true);
     
     }, err => {}, () => {
       this.confirmedFacilityDataTable = $(this.confirmedFacilityTable.nativeElement);
-      this.confirmedFacilityDataTable.DataTable(this.confirmedFacilityDtOptions)
+      this.confirmedFacilityDataTable.DataTable(this.confirmedFacilityDtOptions);
+      this.confirmedResidenceDataTable = $(this.confirmedResidenceTable.nativeElement);
+      this.confirmedResidenceDataTable.DataTable(this.confirmedResidenceDtOptions);
     });
 
      this.localChartType = ChartType.Pie;
@@ -117,33 +174,55 @@ export class HomeComponent implements OnInit, OnDestroy {
       { title: 'Female', imageClass: 'fa fa-circle text-danger' }
     ];
     
-    this.covidService.getOfwCases().subscribe(data=>{
-      this.ofwCases = data.length;
-      this.ofwCasesData = data;
-      this.ofwCasesSex = _.groupBy(this.ofwCasesData, 'sex');
-      this.ofwFemale = Number(this.ofwCasesSex['Female'].length);
-      this.ofwMale = Number(this.ofwCasesSex['Male'].length);
-      this.addData(this.ofwChartType, this.ofwChartData, [this.ofwMale, this.ofwFemale], [this.ofwMale, this.ofwFemale], 'OFW Statistics ' + this.ofwCases);
-      this.chartService.ofwGenderUpdated.next(true);
-    });
-    this.ofwChartType = ChartType.Pie;
-    this.ofwChartData = {
+   
+
+
+
+    this.locationChartType = ChartType.Bar;
+    this.locationChartData = {
       labels: [],
       series: []
     };
-    this.ofwChartLegendItems = [
-      { title: 'Male', imageClass: 'fa fa-circle text-info' },
-      { title: 'Female', imageClass: 'fa fa-circle text-danger' }
+    this.locationChartOptions = {
+      seriesBarDistance: 10,
+      axisX: {
+        showGrid: false
+      },
+      height: '245px'
+    };
+    this.locationChartResponsive = [
+      ['screen and (max-width: 640px)', {
+        seriesBarDistance: 5,
+        axisX: {
+          labelInterpolationFnc: function (value) {
+            return value[0];
+          }
+        }
+      }]
+    ];
+    this.locationChartLegendItems = [
+   
     ];
     }
 
-     addData(chart, chartData, label, data, title) {
+     addData(chart, chartData, label, data) {
+       
           chartData.labels = label;
           chartData.series = data;
           setTimeout(() => {
             chartData.update;
           }, 10);
   }
+
+  addBarData(chart, chartData, label, data) {
+       
+    chartData.labels = label;
+    chartData.series = []
+    chartData.series.push(data);
+    setTimeout(() => {
+      chartData.update;
+    }, 10);
+}
 
   groupByAge(ary, keyFunc) {
     var r = {};
@@ -160,5 +239,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.chartService.localGenderUpdated.next(false);
     this.chartService.ofwGenderUpdated.next(false);
+    this.chartService.locationUpdated.next(false);
   }
 }

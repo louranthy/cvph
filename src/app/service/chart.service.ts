@@ -7,5 +7,6 @@ import { BehaviorSubject } from 'rxjs';
 export class ChartService {
   public ofwGenderUpdated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public localGenderUpdated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public locationUpdated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   constructor() { }
 }
