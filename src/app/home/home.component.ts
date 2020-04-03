@@ -8,6 +8,8 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Color, Label, SingleDataSet, BaseChartDirective } from 'ng2-charts';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ChartService } from 'app/service/chart.service';
+import { NgxSpinnerService } from "ngx-spinner";
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -41,6 +43,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     public locationChartData: any;
 
     public numberCases: Number;
+    public pumCount: Number;
+    public puiCount: Number;
+    public testedCases: Number;
+    public recoveredCount: Number;
+    public deceasedCount: Number;
     public ofwCases: Number;
     public foreignCases: Number;
     public confirmedCasesData = [];
@@ -70,7 +77,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     confirmedResidenceTableData = [];
     @ViewChild('confirmedResidenceTable', {static: true}) confirmedResidenceTable;
   constructor(private  covidService : CovidService,
-    private chartService : ChartService) {
+    private chartService : ChartService,
+    private spinner: NgxSpinnerService) {
       this.chartService.localGenderUpdated.subscribe( value => {
         this.localGenderUpdated = value;
     });
@@ -84,10 +92,20 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     var self = this;
+    this.showSpinner("countSpinner");
+
+    this.covidService.getCounts().subscribe(data=>{
+      this.numberCases = data.confirmed;
+      this.deceasedCount = data.deceased;
+      this.puiCount = data.pui;
+      this.pumCount = data.pum;
+      this.recoveredCount = data.recovered;
+      this.testedCases = data.tests;
+    });
     this.covidService.getConfirmedCases().subscribe(data=>{
-      this.numberCases = data.length;
       this.confirmedCasesData = data;
       this.confirmedCasesSex = _.groupBy(this.confirmedCasesData, 'sex');
+
       this.confirmedCasesResidence = _.groupBy(this.confirmedCasesData, function(value){
         if(value.metadata.raw_data.residence == null)
         return 'N/A';
@@ -158,6 +176,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   this.chartService.locationUpdated.next(true);
     
     }, err => {}, () => {
+      this.hideSpinner("countSpinner");
       this.confirmedFacilityDataTable = $(this.confirmedFacilityTable.nativeElement);
       this.confirmedFacilityDataTable.DataTable(this.confirmedFacilityDtOptions);
       this.confirmedResidenceDataTable = $(this.confirmedResidenceTable.nativeElement);
@@ -235,6 +254,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  showSpinner(name: string) {
+    this.spinner.show(name);
+  }
+
+  hideSpinner(name: string) {
+    this.spinner.hide(name);
+  }
 
   ngOnDestroy(){
     this.chartService.localGenderUpdated.next(false);

@@ -20,4 +20,8 @@ export class CovidService {
   getForeignNationalCases() {
     return this.http.get<any>("https://ncovph.com/api/foreign-national-cases");
   }
+
+  getCounts() {
+    return this.http.get<any>("https://ncovph.com/api/counts");
+  }
 }

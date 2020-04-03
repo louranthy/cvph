@@ -1,5 +1,5 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -14,6 +14,8 @@ import {TableModule} from 'primeng/table';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { DataTablesModule } from 'angular-datatables';
 import { ChartsModule } from 'ng2-charts';
+import { SharedModule } from './shared/shared.module';
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -26,11 +28,12 @@ import { ChartsModule } from 'ng2-charts';
     AppRoutingModule,
     DataTablesModule.forRoot(),
     TableModule,
-    ChartsModule
+    ChartsModule,
+    SharedModule.forRoot()
   ],
   declarations: [
     AppComponent,
-    AdminLayoutComponent
+    AdminLayoutComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]

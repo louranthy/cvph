@@ -12,6 +12,8 @@ import { HomeComponent } from '../../home/home.component';
 import { LocalCasesComponent } from '../../local/local.component';
 import { ForeignCasesComponent } from '../../foreign/foreign.component';
 import { DataTablesModule } from 'angular-datatables';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -21,8 +23,9 @@ import { DataTablesModule } from 'angular-datatables';
     FormsModule,
     LbdModule,
     NguiMapModule.forRoot({ apiUrl: 'https://maps.google.com/maps/api/js?key=YOUR_KEY_HERE' }),
-    DataTablesModule
-  ],
+    DataTablesModule,
+    NgxSpinnerModule
+  ], schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [
     HomeComponent,
     LocalCasesComponent,

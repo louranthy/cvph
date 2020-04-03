@@ -1,9 +1,12 @@
 <div class="main-content">
     <div class="container-fluid">
-
+            
         <div class="card">
+                <ngx-spinner name="countSpinner" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+                    </ngx-spinner>
             <div class="row">
-                <div class="col-md-12 text-center">
+                <div class="col-md-12 text-center" style="position: relative">
+                     
                     <div class="header col-md-2">
                         <div class="col-md-12 alert alert-active">
                             <h5> Confirmed Cases
@@ -74,7 +77,8 @@
             </div>
 
             <div class="content table-responsive table-full-width">
-                <div class="row">
+                <div class="row"  style="position: relative">
+                       
                     <div class="col-md-9">
                         <lbd-chart *ngIf="locationUpdated" [title]="'By Region'" [subtitle]="''"
                             [chartType]="locationChartType" [chartData]="locationChartData"
